@@ -1,24 +1,20 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useContext } from "react";
 
-export const AuthContext = createContext();
+// Create the context
+const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // {email, role, token}
+// Provider component
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    // On app load, check localStorage for saved user
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) setUser(JSON.parse(savedUser));
-  }, []);
-
+  // Example login function
   const login = (userData) => {
     setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
   };
 
+  // Example logout function
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('user');
   };
 
   return (
@@ -26,4 +22,9 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
-};
+}
+
+// Custom hook for using auth context
+export function useAuth() {
+  return useContext(AuthContext);
+}
