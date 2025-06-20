@@ -17,8 +17,27 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
+  // Example register function
+  const register = async (userData) => {
+  try {
+    const response = await fetch("http://localhost:8000/api/events/register/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData),
+    });
+    if (!response.ok) {
+      throw new Error("Registration failed");
+    }
+    const data = await response.json();
+    setUser(data); // Optionally set user if your API returns user info
+    return { success: true, data };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+};
+
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ currentUser: user, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );
