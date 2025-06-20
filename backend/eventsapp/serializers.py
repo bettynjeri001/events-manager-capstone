@@ -1,12 +1,15 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
-from .models import CustomUser
+from .models import CustomUser, UserProfile, Eventsapp
 
+# User Serializer (basic details)
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['id', 'username', 'email', 'role']
 
+
+# Register Serializer
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
@@ -15,14 +18,15 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ['username', 'email', 'password', 'role']
 
     def create(self, validated_data):
-        user = CustomUser.objects.create_user(
+        return CustomUser.objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
             password=validated_data['password'],
             role=validated_data['role']
         )
-        return user
 
+
+# Login Serializer
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
@@ -32,3 +36,21 @@ class LoginSerializer(serializers.Serializer):
         if user and user.is_active:
             return user
         raise serializers.ValidationError("Invalid credentials")
+
+
+# UserProfile Serializer
+class UserProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = UserProfile
+        fields = ['user', 'bio', 'profile_picture', 'location']
+
+
+# Eventsapp Serializer
+class EventsappSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)  # read-only user detail
+
+    class Meta:
+        model = Eventsapp
+        fields = ['id', 'user', 'title', 'description', 'date', 'location']

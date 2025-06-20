@@ -6,7 +6,7 @@ import { AuthProvider } from "./context/AuthContext";
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
 // import Footer from "./components/Footer";
- 
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
@@ -20,6 +20,7 @@ function App() {
           
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<RegisterForm />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard/>} />
         </Routes>
       </AuthProvider>
     </>
