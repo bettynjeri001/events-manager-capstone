@@ -1,15 +1,19 @@
 import { Link, NavLink } from "react-router-dom";
 import { motion } from 'framer-motion';
 import { FiUser, FiLogOut, FiHome, FiMail } from "react-icons/fi";
-import { useAuth } from "../context/AuthContext"; 
+import { useAuth } from "../context/AuthContext";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-    const { currentUser, logout } = useAuth();
+  const { currentUser, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleSignOut = () => {
-    logout()
-      .then(() => console.log("User logged out"))
-      .catch((error) => console.error("Logout failed", error));
+    logout();
+    navigate("/");
+    // Optionally, you can redirect or reload:
+    // window.location.reload();
   };
 
   const navLinks = [
@@ -18,7 +22,7 @@ const Navbar = () => {
   ];
 
   return (
-    <motion.nav 
+    <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
@@ -26,22 +30,18 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
-          {/* Brand Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            {/* <img className="w-14 h-14" src={logo} alt="logo" /> */}
             <span className="text-2xl font-bold text-orange-600">Eventrum</span>
           </Link>
-
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
               <NavLink
                 key={link.path}
                 to={link.path}
-                className={({ isActive }) => 
+                className={({ isActive }) =>
                   `flex items-center px-3 py-2 rounded-lg transition-colors ${
-                    isActive 
-                      ? 'bg-white text-orange-600' 
+                    isActive
+                      ? 'bg-white text-orange-600'
                       : 'text-orange-600 hover:bg-gray-50'
                   }`
                 }
@@ -51,46 +51,27 @@ const Navbar = () => {
               </NavLink>
             ))}
           </div>
-
-          {/* Right Section */}
           <div className="flex items-center space-x-4">
-            {/* Account Dropdown */}
             {currentUser ? (
               <div className="relative group">
                 <button className="flex items-center space-x-2">
-                  {currentUser.photoURL ? (
-                    <img
-                      className="w-10 h-10 rounded-full border-2 border-orange-500"
-                      src={currentUser.photoURL}
-                      alt="User Avatar"
-                    />
-                  ) : (
-                    <div className="p-2 rounded-full bg-gray-100">
-                      <FiUser className="w-6 h-6" />
-                    </div>
-                  )}
+                  <div className="p-2 rounded-full bg-gray-100">
+                    <FiUser className="w-6 h-6" />
+                  </div>
                 </button>
-
-                {/* Dropdown Menu */}
                 <div className="absolute right-0 mt-2 w-64 origin-top-right rounded-xl shadow-lg bg-white transform scale-0 group-hover:scale-100 transition-transform">
                   <div className="p-4">
                     <div className="flex items-center space-x-3">
-                      {currentUser.photoURL ? (
-                        <img
-                          className="w-12 h-12 rounded-full"
-                          src={currentUser.photoURL}
-                          alt="User Avatar"
-                        />
-                      ) : (
-                        <div className="p-2 rounded-full bg-orange-100">
-                          <FiUser className="w-8 h-8 text-red-600" />
-                        </div>
-                      )}
+                      <div className="p-2 rounded-full bg-orange-100">
+                        <FiUser className="w-8 h-8 text-red-600" />
+                      </div>
                       <div>
                         <p className="font-medium text-gray-900">
-                          {currentUser.displayName || 'User'}
+                          {currentUser.username || 'User'}
                         </p>
-                        <p className="text-sm text-gray-500">{currentUser.email}</p>
+                        <p className="text-sm text-gray-500">
+                          {currentUser.email || ''}
+                        </p>
                       </div>
                     </div>
                     <button
@@ -107,7 +88,7 @@ const Navbar = () => {
               <div className="flex space-x-2">
                 <NavLink
                   to="/login"
-                  className="px-4 py-2 rounded-lg  text-white hover:bg-orange-700 transition-colors"
+                  className="px-4 py-2 rounded-lg text-white hover:bg-orange-700 transition-colors"
                 >
                   Log In
                 </NavLink>
@@ -121,7 +102,6 @@ const Navbar = () => {
             )}
           </div>
         </div>
-
         {/* Mobile Navigation */}
         <div className="md:hidden mt-4">
           <div className="grid gap-2">
@@ -129,10 +109,10 @@ const Navbar = () => {
               <NavLink
                 key={link.path}
                 to={link.path}
-                className={({ isActive }) => 
+                className={({ isActive }) =>
                   `flex items-center px-4 py-3 rounded-lg ${
-                    isActive 
-                      ? 'bg-blue-100 text-red-600' 
+                    isActive
+                      ? 'bg-blue-100 text-red-600'
                       : 'text-gray-600 hover:bg-gray-50'
                   }`
                 }

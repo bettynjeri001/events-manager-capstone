@@ -1,49 +1,40 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useContext, useState } from "react";
 
-// Create the context
 const AuthContext = createContext();
 
-// Provider component
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(
+    JSON.parse(localStorage.getItem("currentUser")) || null
+  );
 
-  // Example login function
+  // Login: set user and persist to localStorage
   const login = (userData) => {
-    setUser(userData);
+    setCurrentUser(userData);
+    localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("userRole", userData.role);
+    localStorage.setItem("currentUser", JSON.stringify(userData));
   };
 
-  // Example logout function
+  // Logout: clear user and localStorage
   const logout = () => {
-    setUser(null);
+    setCurrentUser(null);
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("currentUser");
   };
 
-  // Example register function
+  // Register: implement as needed
   const register = async (userData) => {
-  try {
-    const response = await fetch("http://localhost:8000/api/events/register/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData),
-    });
-    if (!response.ok) {
-      throw new Error("Registration failed");
-    }
-    const data = await response.json();
-    setUser(data); // Optionally set user if your API returns user info
-    return { success: true, data };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-};
+    // Registration logic here
+  };
 
   return (
-    <AuthContext.Provider value={{ currentUser: user, login, logout, register }}>
+    <AuthContext.Provider value={{ currentUser, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-// Custom hook for using auth context
 export function useAuth() {
   return useContext(AuthContext);
 }

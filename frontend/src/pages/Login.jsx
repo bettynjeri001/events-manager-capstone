@@ -1,40 +1,49 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (formData.username === "admin" && formData.password === "admin123") {
+  e.preventDefault();
+  try {
+    // Admin shortcut (optional)
+    if (formData.username === "admin" && formData.password === "123456") {
+      login({ username: "admin", role: "admin" });
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("userRole", "admin");
       navigate("/admin-dashboard");
       return;
     }
-    try {
-      const response = await fetch("http://127.0.0.1:8000/api/eventsapp/login/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      if (response.ok) {
-        const data = await response.json();
-        if (data.role === "attendee") navigate("/home");
-        else if (data.role === "organizer") navigate("/organizer-dashboard");
-        else navigate("/admin-dashboard");
-      } else {
-        alert("Login failed! Please check your credentials.");
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      alert("Something went wrong. Please try again.");
-    }
-  };
+    const response = await fetch("http://127.0.0.1:8000/api/eventsapp/login/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
 
+    if (response.ok) {
+      const data = await response.json();
+      login(data); // update context
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("userRole", data.role);
+      if (data.role === "attendee") navigate("/home");
+      else if (data.role === "organizer") navigate("/organizer-dashboard");
+      else navigate("/admin-dashboard");
+    } else {
+      alert("Login failed! Please check your credentials.");
+    }
+  } catch (error) {
+    console.error("Login error:", error);
+    alert("Something went wrong. Please try again.");
+  }
+};
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md">

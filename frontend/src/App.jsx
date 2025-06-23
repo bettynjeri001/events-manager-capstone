@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
 // import Footer from "./components/Footer";
 import AdminDashboard from "./pages/AdminDashboard";
+import OrganizerDashboard from "./pages/OrganizerDashboard";
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/admin-dashboard" element={<AdminDashboard/>} />
+          <Route path="/organizer-dashboard" element={<OrganizerDashboard />} />
+          
         </Routes>
       </AuthProvider>
     </>
