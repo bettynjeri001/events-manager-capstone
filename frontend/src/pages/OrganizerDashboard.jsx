@@ -1,20 +1,27 @@
+import { image } from "motion/react-client";
 import React, { useState } from "react";
 import { FiGrid, FiClipboard, FiBarChart2 } from "react-icons/fi";
 
 const initialEvents = [
   {
     id: 1,
-    title: "Nairobi Tech Expo",
+    title: "Investors Summit Nairobi",
     date: "2025-07-10",
-    location: "Nairobi",
-    description: "A showcase of the latest in tech.",
+    time: "09:00am",
+    location: "Villa Rosa Kempinski, Nairobi",
+    description: "Meet top investors and entrepreneurs.",
+    ticket: 1500,
+    image: "https://example.com/event1.jpg",
   },
   {
     id: 2,
-    title: "Mombasa Food Carnival",
+    title: "AI Machine Learning Tech Expo",
     date: "2025-08-15",
-    location: "Mombasa",
-    description: "Taste the best dishes from the coast.",
+    time: "12:00pm",
+    location: "KICC ,Nairobi",
+    description: "Explore the latest advancements in AI and machine learning.",
+    ticket: 1000,
+    image: "https://example.com/event2.jpg",
   },
 ];
 
