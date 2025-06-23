@@ -21,7 +21,7 @@ export default function Register() {
       alert("Registration successful! Please login.");
       navigate("/login");
     } else {
-      alert("Registration failed! Please check the details.");
+      alert("Registration failed! User arleady exists.");
     }
   };
 
