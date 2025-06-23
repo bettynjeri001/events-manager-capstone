@@ -7,7 +7,7 @@ import { FiSearch } from "react-icons/fi";
 import Footer from '../components/Footer';
 
 const sampleEvents = [
-  { id: 1, name: "Nairobi Food Fest", location: "Nairobi", category: "music" },
+  { id: 1, name: "AI Tech Conference", location: "Raddison, Nairobi", category: "tech" },
  
 ];
 
