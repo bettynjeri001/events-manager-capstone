@@ -1,4 +1,4 @@
-import { image } from "motion/react-client";
+import { i, image } from "motion/react-client";
 import React, { useState } from "react";
 import { FiGrid, FiClipboard, FiBarChart2 } from "react-icons/fi";
 
@@ -40,7 +40,10 @@ export default function OrganizerDashboard() {
   const [form, setForm] = useState({
     title: "",
     date: "",
+    time: "",
     location: "",
+    ticket: "",
+    image: "",
     description: "",
   });
   const [activeMenu, setActiveMenu] = useState("event");
@@ -51,12 +54,12 @@ export default function OrganizerDashboard() {
 
   const handleAddEvent = (e) => {
     e.preventDefault();
-    if (!form.title || !form.date || !form.location) return;
+    if (!form.title || !form.date || !form.time || !form.location || !form.ticket) return;
     setEvents([
       ...events,
       { ...form, id: Date.now() }
     ]);
-    setForm({ title: "", date: "", location: "", description: "" });
+    setForm({ title: "", date: "", time: "", location: "", ticket: "", image: "", description: "" });
     setShowForm(false);
   };
 
@@ -65,7 +68,10 @@ export default function OrganizerDashboard() {
     setForm({
       title: event.title,
       date: event.date,
+      time: event.time || "",
       location: event.location,
+      ticket: event.ticket || "",
+      image: event.image || "",
       description: event.description,
     });
     setShowForm(true);
@@ -77,7 +83,7 @@ export default function OrganizerDashboard() {
       ev.id === editId ? { ...form, id: editId } : ev
     ));
     setEditId(null);
-    setForm({ title: "", date: "", location: "", description: "" });
+    setForm({ title: "", date: "", time: "", location: "", ticket: "", image: "", description: "" });
     setShowForm(false);
   };
 
@@ -124,6 +130,13 @@ export default function OrganizerDashboard() {
                   required
                 />
                 <input
+                  type="time"
+                  name="time"
+                  value={form.time || ""}
+                  onChange={handleInputChange}
+                  className="border border-gray-300 rounded-lg px-3 py-2"
+               />
+                <input
                   type="text"
                   name="location"
                   placeholder="Location"
@@ -132,6 +145,24 @@ export default function OrganizerDashboard() {
                   className="border border-gray-300 rounded-lg px-3 py-2"
                   required
                 />
+                <input
+      type="number"
+      name="ticket"
+      placeholder="Ticket Price"
+      value={form.ticket || ""}
+      onChange={handleInputChange}
+      className="border border-gray-300 rounded-lg px-3 py-2"
+      min="0"
+      required
+    />
+    <input
+      type="text"
+      name="image"
+      placeholder="Image URL"
+      value={form.image || ""}
+      onChange={handleInputChange}
+      className="border border-gray-300 rounded-lg px-3 py-2"
+    />
                 <textarea
                   name="description"
                   placeholder="Description"
