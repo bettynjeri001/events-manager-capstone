@@ -1,14 +1,21 @@
 // import { i, image } from "motion/react-client";
-import React, { useState } from "react";
-import React, { useEffect } from "react";
-import { FiGrid, FiClipboard, FiBarChart2 } from "react-icons/fi";
 
+import React, {useState, useEffect } from "react";
+import { FiGrid, FiClipboard, FiBarChart2, FiEdit, FiTrash2 } from "react-icons/fi";
+
+function formatTime12h(time) {
+  if (!time) return "";
+  const [hour, minute] = time.split(":");
+  const h = ((+hour % 12) || 12);
+  const ampm = +hour < 12 ? "" : "";
+  return `${h}:${minute} ${ampm}`;
+}
 const initialEvents = [
   {
     id: 1,
     title: "Investors Summit Nairobi",
     date: "2025-07-10",
-    time: "09:00am",
+    time: "09:00",
     location: "Villa Rosa Kempinski, Nairobi",
     description: "Meet top investors and entrepreneurs.",
     ticket: 1500,
@@ -18,7 +25,7 @@ const initialEvents = [
     id: 2,
     title: "AI Machine Learning Tech Expo",
     date: "2025-08-15",
-    time: "12:00pm",
+    time: "12:00",
     location: "KICC ,Nairobi",
     description: "Explore the latest advancements in AI and machine learning.",
     ticket: 1000,
@@ -143,6 +150,7 @@ export default function OrganizerDashboard() {
                   value={form.time || ""}
                   onChange={handleInputChange}
                   className="border border-gray-300 rounded-lg px-3 py-2"
+                 
                />
                 <input
                   type="text"
@@ -203,26 +211,28 @@ export default function OrganizerDashboard() {
                     <div>
                       <h3 className="font-bold text-lg text-orange-700">{event.title}</h3>
                       <p className="text-gray-700 text-sm">
-                        {event.date} {event.time && <>at {event.time}</>} &middot; {event.location}
+                        {event.date} {event.time && <>at {formatTime12h(event.time)}</>} &middot; {event.location}
                       </p>
                       <p className="text-gray-600">{event.description}</p>
                       <p className="text-sm text-cyan-900 font-semibold">
-                       Ticket: KES {event.ticket}
+                       Ticket: Ksh {event.ticket}
                       </p>
                     </div>
                     </div>
                     <div className="flex gap-2 mt-2 md:mt-0">
                       <button
                         onClick={() => handleEditEvent(event)}
-                        className="bg-cyan-900 hover:bg-cyan-700 text-white px-3 py-1 rounded-lg text-sm"
-                      >
-                        Edit
+                       className="p-2 rounded-full bg-cyan-900 hover:bg-cyan-700 text-white"
+                     title="Edit"
+                    >
+                  <FiEdit className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleDelete(event.id)}
-                        className="bg-orange-700 hover:bg-orange-300 text-white px-3 py-1 rounded-lg text-sm"
-                      >
-                        Delete
+                        className="p-2 rounded-full bg-orange-700 hover:bg-orange-300 text-white"
+                     title="Delete"
+              >
+                   <FiTrash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </li>
