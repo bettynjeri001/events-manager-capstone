@@ -1,5 +1,6 @@
-import { i, image } from "motion/react-client";
+// import { i, image } from "motion/react-client";
 import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { FiGrid, FiClipboard, FiBarChart2 } from "react-icons/fi";
 
 const initialEvents = [
@@ -34,7 +35,14 @@ const sideMenu = [
 ];
 
 export default function OrganizerDashboard() {
-  const [events, setEvents] = useState(initialEvents);
+ const [events, setEvents] = useState(() => {
+    const saved = localStorage.getItem("organizerEvents");
+    return saved ? JSON.parse(saved) : initialEvents;
+  });
+
+  useEffect(() => {
+  localStorage.setItem("organizerEvents", JSON.stringify(events));
+}, [events]);
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState(null);
   const [form, setForm] = useState({
@@ -146,23 +154,22 @@ export default function OrganizerDashboard() {
                   required
                 />
                 <input
-      type="number"
-      name="ticket"
-      placeholder="Ticket Price"
-      value={form.ticket || ""}
-      onChange={handleInputChange}
-      className="border border-gray-300 rounded-lg px-3 py-2"
-      min="0"
-      required
-    />
-    <input
-      type="text"
-      name="image"
-      placeholder="Image URL"
-      value={form.image || ""}
-      onChange={handleInputChange}
-      className="border border-gray-300 rounded-lg px-3 py-2"
-    />
+                    type="text"
+                 name="ticket"
+                placeholder="Ticket Price or 'Free..'"
+                value={form.ticket || ""}
+                onChange={handleInputChange}
+                className="border border-gray-300 rounded-lg px-3 py-2"
+                 required
+            />
+                  <input
+                  type="text"
+                 name="image"
+                 placeholder="Image URL"
+                 value={form.image || ""}
+                 onChange={handleInputChange}
+                className="border border-gray-300 rounded-lg px-3 py-2"
+             />
                 <textarea
                   name="description"
                   placeholder="Description"
@@ -185,12 +192,24 @@ export default function OrganizerDashboard() {
               <ul className="space-y-4">
                 {events.map((event) => (
                   <li key={event.id} className="bg-stone-100 rounded-lg p-4 flex flex-col md:flex-row md:items-center md:justify-between">
+                    <div className="flex items-center gap-4">
+                     {event.image && (
+                     <img
+                     src={event.image}
+                     alt={event.title}
+                     className="w-24 h-24 object-cover rounded-lg border"
+                  />
+       )}
                     <div>
                       <h3 className="font-bold text-lg text-orange-700">{event.title}</h3>
                       <p className="text-gray-700 text-sm">
-                        {event.date} &middot; {event.location}
+                        {event.date} {event.time && <>at {event.time}</>} &middot; {event.location}
                       </p>
                       <p className="text-gray-600">{event.description}</p>
+                      <p className="text-sm text-cyan-900 font-semibold">
+                       Ticket: KES {event.ticket}
+                      </p>
+                    </div>
                     </div>
                     <div className="flex gap-2 mt-2 md:mt-0">
                       <button
@@ -219,27 +238,29 @@ export default function OrganizerDashboard() {
             <p className="text-gray-700">Manage ticket sales and attendee registrations here.</p>
           </div>
         );
+        
       case "analytics":
         return (
+        
           <div>
             <h1 className="text-3xl font-bold mb-4 text-cyan-900">Analytics</h1>
             <p className="text-gray-700">View event analytics and reports here.</p>
           </div>
         );
-      case "attendee":
-        return (
-          <div>
-            <h1 className="text-3xl font-bold mb-4 text-cyan-900">Attendee Management</h1>
-            <p className="text-gray-700">Manage your event attendees here.</p>
-          </div>
-        );
-      case "finance":
-        return (
-          <div>
-            <h1 className="text-3xl font-bold mb-4 text-cyan-900">Financial Tools</h1>
-            <p className="text-gray-700">Access financial tools and reports here.</p>
-          </div>
-        );
+      // case "attendee":
+      //   return (
+      //     <div>
+      //       <h1 className="text-3xl font-bold mb-4 text-cyan-900">Attendee Management</h1>
+      //       <p className="text-gray-700">Manage your event attendees here.</p>
+      //     </div>
+      //   );
+      // case "finance":
+      //   return (
+      //     <div>
+      //       <h1 className="text-3xl font-bold mb-4 text-cyan-900">Financial Tools</h1>
+      //       <p className="text-gray-700">Access financial tools and reports here.</p>
+      //     </div>
+      //   );
       default:
         return null;
     }
