@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FiGrid, FiClipboard, FiBarChart2, FiUsers, FiDollarSign } from "react-icons/fi";
+import { FiGrid, FiClipboard, FiBarChart2 } from "react-icons/fi";
 
 const initialEvents = [
   {
@@ -21,9 +21,9 @@ const initialEvents = [
 const sideMenu = [
   { key: "event", label: "Event Management", icon: <FiGrid /> },
   { key: "ticket", label: "Ticketing & Registration", icon: <FiClipboard /> },
-  { key: "analytics", label: "Analytics", icon: <FiBarChart2 /> },
-  { key: "attendee", label: "Attendee Management", icon: <FiUsers /> },
-  { key: "finance", label: "Financial Tools", icon: <FiDollarSign /> },
+  { key: "analytics", label: "Analytics", icon: <FiBarChart2 /> }
+  
+  
 ];
 
 export default function OrganizerDashboard() {
