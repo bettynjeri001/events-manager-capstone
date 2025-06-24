@@ -6,6 +6,8 @@ import hero1 from '../assets/hero1.jpg'
 import { FiSearch } from "react-icons/fi";
 import Footer from '../components/Footer';
 
+
+
 const sampleEvents = [
   { id: 1, name: "AI Tech Conference", location: "Raddison, Nairobi", category: "tech" },
  
@@ -19,8 +21,9 @@ function Search({ onSearch }) {
     e.preventDefault();
     onSearch && onSearch({ location, category });
   };
-
+  
   return (
+
     <form onSubmit={handleSubmit} className="flex flex-col md:flex-row items-center justify-center gap-4 mb-8">
       <input
         type="text"

@@ -7,7 +7,7 @@ function formatTime12h(time) {
   if (!time) return "";
   const [hour, minute] = time.split(":");
   const h = ((+hour % 12) || 12);
-  const ampm = +hour < 12 ? "" : "";
+  const ampm = +hour < 12 ? "AM" : "PM";
   return `${h}:${minute} ${ampm}`;
 }
 const initialEvents = [
@@ -211,7 +211,7 @@ export default function OrganizerDashboard() {
                     <div>
                       <h3 className="font-bold text-lg text-orange-700">{event.title}</h3>
                       <p className="text-gray-700 text-sm">
-                        {event.date} {event.time && <>at {formatTime12h(event.time)}</>} &middot; {event.location}
+                         {event.date} {event.time && <>at {formatTime12h(event.time)}</>} &middot; {event.location}
                       </p>
                       <p className="text-gray-600">{event.description}</p>
                       <p className="text-sm text-cyan-900 font-semibold">

@@ -19,6 +19,7 @@ const Navbar = () => {
   const navLinks = [
     { path: "/", name: "Home", icon: <FiHome className="mr-2 text-red-500" /> },
     { path: "/contact", name: "Contact", icon: <FiMail className="mr-2 text-red-500" /> },
+      { path: "/organizer-dashboard", name: "Organizer Dashboard", icon: <FiMail className="mr-2 text-red-500" /> },
   ];
 
   return (
