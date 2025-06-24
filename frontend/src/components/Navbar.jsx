@@ -1,6 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import { motion } from 'framer-motion';
-import { FiUser, FiLogOut, FiHome, FiMail } from "react-icons/fi";
+import { FiUser, FiLogOut, FiHome, FiMail, FiBookmark} from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,10 +17,18 @@ const Navbar = () => {
   };
 
   const navLinks = [
-    { path: "/", name: "Home", icon: <FiHome className="mr-2 text-red-500" /> },
-    { path: "/contact", name: "Contact", icon: <FiMail className="mr-2 text-red-500" /> },
-      { path: "/organizer-dashboard", name: "Organizer Dashboard", icon: <FiMail className="mr-2 text-red-500" /> },
+    { path: "/", name: "Home", icon: <FiHome className="mr-2 text-orange-500" /> },
+    { path: "/contact", name: "Contact", icon: <FiMail className="mr-2 text-orange-500" /> },
+      // { path: "/organizer-dashboard", name: "Organizer Dashboard", icon: <FiMail className="mr-2 text-red-500" /> },
   ];
+   
+  if (currentUser && currentUser.role === "organizer") {
+  navLinks.push({
+    path: "/organizer-dashboard",
+    name: "Organizer Dashboard",
+    icon: <FiBookmark className="mr-2 text-orange-500" />,
+  });
+}
 
   return (
     <motion.nav
@@ -64,7 +72,7 @@ const Navbar = () => {
                   <div className="p-4">
                     <div className="flex items-center space-x-3">
                       <div className="p-2 rounded-full bg-orange-100">
-                        <FiUser className="w-8 h-8 text-red-600" />
+                        <FiUser className="w-8 h-8 text-orange-600" />
                       </div>
                       <div>
                         <p className="font-medium text-gray-900">
