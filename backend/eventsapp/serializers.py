@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
-from .models import CustomUser, UserProfile, Eventsapp
+from .models import CustomUser, UserProfile, Eventsapp, Registration
 
 # User Serializer (basic details)
 class UserSerializer(serializers.ModelSerializer):
@@ -49,8 +49,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 # Eventsapp Serializer
 class EventsappSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)  # read-only user detail
-
     class Meta:
         model = Eventsapp
-        fields = ['id', 'user', 'title', 'description', 'date', 'location']
+        fields = ['id', 'user', 'title', 'description', 'date', 'time', 'location', 'ticket', 'image']
+
+class RegistrationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Registration
+        fields = ['id', 'event', 'name', 'email', 'registered_at']

@@ -2,6 +2,7 @@
 
 import React, {useState, useEffect } from "react";
 import { FiGrid, FiClipboard, FiBarChart2, FiEdit, FiTrash2 } from "react-icons/fi";
+import { useAuth } from "../context/AuthContext";
 
 function formatTime12h(time) {
   if (!time) return "";
@@ -42,14 +43,17 @@ const sideMenu = [
 ];
 
 export default function OrganizerDashboard() {
- const [events, setEvents] = useState(() => {
-    const saved = localStorage.getItem("organizerEvents");
-    return saved ? JSON.parse(saved) : initialEvents;
-  });
+  const { currentUser } = useAuth();
+ const [events, setEvents] = useState([]);
+   const fetchEvents = async () => {
+  const res = await fetch("http://localhost:8000/api/events/");
+  const data = await res.json();
+  setEvents(data);
+};
 
   useEffect(() => {
-  localStorage.setItem("organizerEvents", JSON.stringify(events));
-}, [events]);
+    fetchEvents();
+}, []);
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState(null);
   const [form, setForm] = useState({
@@ -67,16 +71,37 @@ export default function OrganizerDashboard() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleAddEvent = (e) => {
+  const handleAddEvent = async (e) => {
     e.preventDefault();
-    if (!form.title || !form.date || !form.time || !form.location || !form.ticket) return;
-    setEvents([
-      ...events,
-      { ...form, id: Date.now() }
-    ]);
+   const payload = {
+    title: form.title,
+    description: form.description,
+    date: form.date,
+    time: form.time,
+    location: form.location,
+    ticket: form.ticket,
+    image: form.image,
+    user: currentUser.id, // or however you identify the user
+  };
+
+  const response = await fetch("http://localhost:8000/api/events/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      // Add authentication header if needed
+      // "Authorization": "Token YOUR_TOKEN"
+    },
+    body: JSON.stringify(payload),
+  });
+  if (response.ok) {
     setForm({ title: "", date: "", time: "", location: "", ticket: "", image: "", description: "" });
     setShowForm(false);
-  };
+    fetchEvents(); // Refresh the event list
+  } else {
+    // Handle error
+    alert("Failed to add event");
+  }
+};
 
   const handleEditEvent = (event) => {
     setEditId(event.id);
@@ -92,19 +117,42 @@ export default function OrganizerDashboard() {
     setShowForm(true);
   };
 
-  const handleUpdateEvent = (e) => {
-    e.preventDefault();
-    setEvents(events.map(ev =>
-      ev.id === editId ? { ...form, id: editId } : ev
-    ));
+  const handleUpdateEvent = async (e) => {
+  e.preventDefault();
+  const payload = {
+    title: form.title,
+    description: form.description,
+    date: form.date,
+    time: form.time,
+    location: form.location,
+    ticket: form.ticket,
+    image: form.image,
+    user: currentUser.id, // or however you identify the user
+  };
+
+  const response = await fetch(`http://localhost:8000/api/events/${editId}/`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      // "Authorization": "Token YOUR_TOKEN" // if needed
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (response.ok) {
     setEditId(null);
     setForm({ title: "", date: "", time: "", location: "", ticket: "", image: "", description: "" });
     setShowForm(false);
-  };
+    fetchEvents(); // Refresh the event list
+  } else {
+    alert("Failed to update event");
+  }
+};
 
-  const handleDelete = (id) => {
-    setEvents(events.filter(ev => ev.id !== id));
-  };
+  const handleDelete = async (id) => {
+  const res = await fetch(`http://localhost:8000/api/events/${id}/`, { method: "DELETE" });
+  if (res.ok) fetchEvents();
+};
 
   // Content for each menu
   const renderContent = () => {

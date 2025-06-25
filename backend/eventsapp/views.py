@@ -1,12 +1,13 @@
 from rest_framework import generics, status
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 # from django.contrib.auth import login
 from django.contrib.auth.models import User
-from .models import Eventsapp, UserProfile
-from .serializers import EventsappSerializer, RegisterSerializer, UserProfileSerializer, LoginSerializer 
+from .models import Eventsapp, Registration,UserProfile
+from .serializers import EventsappSerializer, RegisterSerializer, UserProfileSerializer, LoginSerializer, RegistrationSerializer
 from rest_framework import serializers
 from django.contrib.auth import login
 
@@ -47,3 +48,11 @@ class LoginView(APIView):
             login(request, user)
             return Response({'id': user.id, 'role': user.role}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class EventsappViewSet(viewsets.ModelViewSet):
+    queryset = Eventsapp.objects.all()
+    serializer_class = EventsappSerializer
+
+class RegistrationViewSet(viewsets.ModelViewSet):
+    queryset = Registration.objects.all()
+    serializer_class = RegistrationSerializer
