@@ -61,6 +61,7 @@ function Search({ onSearch }) {
 export default function Home() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchLocation, setSearchLocation] = useState('');
 
   useEffect(() => {
     fetch("http://localhost:8000/api/events/")
@@ -75,9 +76,15 @@ export default function Home() {
   if (loading) return <p>Loading events...</p>;
 
 
-   const handleSearch = (searchParams) => {
-     
+   const handleSearch = ({location}) => {
+     setSearchLocation(location);
    };
+
+    const filteredEvents = events.filter(event =>
+    searchLocation
+      ? event.location.toLowerCase().includes(searchLocation.toLowerCase())
+      : true
+  );
 
    return ( 
     <>
@@ -121,11 +128,11 @@ export default function Home() {
 
             <div className="container mx-auto px-4 py-8">
               <h1 className="text-3xl font-bold mb-6">Upcoming Events</h1>
-              {events.length === 0 ? (
-                <p className="text-gray-500">No events available.</p>
+              {filteredEvents.length === 0 ? (
+                <p className="text-gray-700">No events available.</p>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {events.map(event => (
+                  {filteredEvents.map(event => (
                     <div key={event.id} className="bg-white rounded-lg shadow p-4 flex flex-col">
                       {event.image && (
                         <img
