@@ -41,9 +41,14 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     
+    
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -147,3 +152,9 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'eventsapp.CustomUser'
+
+DARJA_CONSUMER_KEY = '1wZeeS5JS4RG3jMltCb6dPvbify7V8WdPJYm6M9sbHKDG6KJ'
+DARJA_CONSUMER_SECRET = '05A8njsirGDvxVDcXAU27n8v7WmG0iaFbs4cqBEWkDXDAG5lESMWe0Y9DUAOiNbF'
+DARJA_SHORTCODE = '174379'
+DARJA_PASSKEY = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919'
+DARJA_TEST_MSISDN = '254790580677'

@@ -235,7 +235,7 @@ export default function OrganizerDashboard() {
                 />
                 <button
                   type="submit"
-                  className="bg-cyan-900 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg font-semibold"
+                  className="bg-cyan-900 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-semibold"
                 >
                   {editId ? "Update Event" : "Add Event"}
                 </button>

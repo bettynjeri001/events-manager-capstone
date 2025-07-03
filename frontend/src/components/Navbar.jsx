@@ -4,31 +4,40 @@ import { FiUser, FiLogOut, FiHome, FiMail, FiBookmark} from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
-const Navbar = () => {
+
+export default function Navbar() {
+  
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
 
-  const handleSignOut = () => {
+ const handleSignOut = () => {
     logout();
     navigate("/");
-    // Optionally, you can redirect or reload:
-    // window.location.reload();
   };
 
   const navLinks = [
     { path: "/", name: "Home", icon: <FiHome className="mr-2 text-orange-500" /> },
     { path: "/contact", name: "Contact", icon: <FiMail className="mr-2 text-orange-500" /> },
-      // { path: "/organizer-dashboard", name: "Organizer Dashboard", icon: <FiMail className="mr-2 text-red-500" /> },
   ];
-   
+
   if (currentUser && currentUser.role === "organizer") {
-  navLinks.push({
-    path: "/organizer-dashboard",
-    name: "Organizer Dashboard",
-    icon: <FiBookmark className="mr-2 text-orange-500" />,
-  });
-}
+    navLinks.push({
+      path: "/organizer-dashboard",
+      name: "Organizer Dashboard",
+      icon: <FiBookmark className="mr-2 text-orange-500" />,
+    });
+  }
+
+   if (currentUser && currentUser.role === "attendee") {
+    navLinks.push({
+      path: "/attendee-dashboard",
+      name: "My Dashboard",
+      icon: <FiBookmark className="mr-2 text-orange-500" />,
+    });
+  }
 
   return (
     <motion.nav
@@ -37,6 +46,7 @@ const Navbar = () => {
       transition={{ duration: 0.5 }}
       className="sticky top-0 z-50 bg-cyan-950 shadow-sm"
     >
+     
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-2">
@@ -135,6 +145,4 @@ const Navbar = () => {
       </div>
     </motion.nav>
   );
-};
-
-export default Navbar;
+}

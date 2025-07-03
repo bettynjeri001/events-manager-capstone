@@ -10,6 +10,10 @@ from .models import Eventsapp, Registration,UserProfile
 from .serializers import EventsappSerializer, RegisterSerializer, UserProfileSerializer, LoginSerializer, RegistrationSerializer
 from rest_framework import serializers
 from django.contrib.auth import login
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 
 class EventsappListCreateView(generics.ListCreateAPIView):
     serializer_class = EventsappSerializer
@@ -54,5 +58,37 @@ class EventsappViewSet(viewsets.ModelViewSet):
     serializer_class = EventsappSerializer
 
 class RegistrationViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Registration.objects.all()
     serializer_class = RegistrationSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = Registration.objects.all()
+        attendee_id = self.request.query_params.get('attendee')
+        if attendee_id:
+            queryset = queryset.filter(user__id=attendee_id)
+        elif hasattr(user, "role") and user.role == "attendee":
+            queryset = queryset.filter(user=user)
+        return queryset
+
+class MpesaPayView(APIView):
+    def post(self, request):
+        phone = request.data.get("phone")
+        amount = request.data.get("amount")
+        event_id = request.data.get("event")
+        registration_id = request.data.get("registration")
+        cl = MpesaClient()
+        account_reference = f"event-{event_id}"
+        transaction_desc = f"Ticket for event {event_id}"
+        callback_url = "https://yourdomain.com/api/mpesa/callback/"
+
+        try:
+            response = cl.stk_push(phone, amount, account_reference, transaction_desc, callback_url)
+            if response['ResponseCode'] == '0':
+                return Response({"message": "Payment initiated. Check your phone for the M-Pesa prompt."}, status=200)
+            else:
+                return Response({"error": "Payment initiation failed."}, status=400)
+        except Exception as e:
+            return Response({"error": str(e)}, status=400)
+

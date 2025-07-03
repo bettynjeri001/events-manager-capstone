@@ -8,6 +8,8 @@ import Navbar from "./components/Navbar";
 // import Footer from "./components/Footer";
 import AdminDashboard from "./pages/AdminDashboard";
 import OrganizerDashboard from "./pages/OrganizerDashboard";
+import Tickets from "./pages/Tickets";
+import AttendeeDashboard from "./pages/AttendeeDashboard";
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/admin-dashboard" element={<AdminDashboard/>} />
           <Route path="/organizer-dashboard" element={<OrganizerDashboard />} />
+          <Route path="/attendee-dashboard" element={<AttendeeDashboard />} />
+          <Route path="/tickets/:eventId" element={<Tickets />} />
           
         </Routes>
       </AuthProvider>

@@ -5,13 +5,15 @@ import hero1 from '../assets/hero1.jpg'
 //import Search from '../components/Search'
 import { FiSearch } from "react-icons/fi";
 import Footer from '../components/Footer';
-
+import { useNavigate } from "react-router-dom";
 
 
 const sampleEvents = [
   { id: 1, name: "AI Tech Conference", location: "Raddison, Nairobi", category: "tech" },
  
 ];
+
+
 
 function formatTime12h(time) {
   if (!time) return "";
@@ -62,6 +64,7 @@ export default function Home() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchLocation, setSearchLocation] = useState('');
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     fetch("http://localhost:8000/api/events/")
@@ -151,8 +154,8 @@ export default function Home() {
                       </p>
                       <button
                         className="mt-2 bg-cyan-900 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-semibold"
-                        onClick={() => alert(`Register for ${event.title}`)}
-                      >
+                        onClick={() => navigate(`/tickets/${event.id}`)}
+                       >              
                         Register and Get Tickets
                       </button>
                     </div>
